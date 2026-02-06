@@ -66,7 +66,7 @@
 </script>
 
 <main class="mx-auto max-w-5xl px-4 py-12">
-	<h1 class="mb-6 text-2xl font-bold text-gray-900">PNT Explorer</h1>
+	<h1 class="mb-6 text-2xl font-bold text-gray-900 dark:text-gray-100">PNT Explorer</h1>
 
 	<form
 		onsubmit={(e) => {
@@ -76,7 +76,7 @@
 		class="space-y-4"
 	>
 		<div>
-			<label for="token" class="block text-sm font-medium text-gray-700">
+			<label for="token" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
 				Bearer Token
 			</label>
 			<textarea
@@ -85,12 +85,12 @@
 				placeholder="Pega aquí el token JWT (sin el prefijo 'Bearer')"
 				required
 				rows="3"
-				class="mt-1 block w-full rounded-md border-gray-300 font-mono text-xs shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+				class="mt-1 block w-full rounded-md border-gray-300 font-mono text-xs shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:placeholder-gray-500 dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
 			></textarea>
 		</div>
 
 		<div>
-			<label for="idSolicitud" class="block text-sm font-medium text-gray-700">
+			<label for="idSolicitud" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
 				ID Solicitud Dependencia
 			</label>
 			<input
@@ -99,14 +99,14 @@
 				bind:value={idSolicitudDependencia}
 				placeholder="Ej: 123456"
 				required
-				class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+				class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:placeholder-gray-500 dark:focus:border-indigo-400 dark:focus:ring-indigo-400"
 			/>
 		</div>
 
 		<button
 			type="submit"
 			disabled={cargando}
-			class="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50"
+			class="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50 dark:bg-indigo-500 dark:hover:bg-indigo-400"
 		>
 			{#if cargando}
 				Consultando...
@@ -120,12 +120,12 @@
 		<div class="mt-8 grid gap-6 lg:grid-cols-2">
 			<!-- Detalle SICOM -->
 			<div>
-				<h2 class="mb-2 text-lg font-semibold text-gray-800">Detalle SICOM</h2>
+				<h2 class="mb-2 text-lg font-semibold text-gray-800 dark:text-gray-200">Detalle SICOM</h2>
 				{#if errorDetalle}
-					<div class="rounded-md bg-red-50 p-4 text-sm text-red-700">{errorDetalle}</div>
+					<div class="rounded-md bg-red-50 p-4 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-400">{errorDetalle}</div>
 				{:else if resultadoDetalle}
 					<pre
-						class="overflow-x-auto rounded-md bg-gray-100 p-4 text-sm text-gray-800">{JSON.stringify(
+						class="overflow-x-auto rounded-md bg-gray-100 p-4 text-sm text-gray-800 dark:bg-gray-800 dark:text-gray-200">{JSON.stringify(
 							resultadoDetalle,
 							null,
 							2
@@ -135,12 +135,12 @@
 
 			<!-- Detalle Solicitante -->
 			<div>
-				<h2 class="mb-2 text-lg font-semibold text-gray-800">Detalle Solicitante</h2>
+				<h2 class="mb-2 text-lg font-semibold text-gray-800 dark:text-gray-200">Detalle Solicitante</h2>
 				{#if errorSolicitante}
-					<div class="rounded-md bg-red-50 p-4 text-sm text-red-700">{errorSolicitante}</div>
+					<div class="rounded-md bg-red-50 p-4 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-400">{errorSolicitante}</div>
 				{:else if resultadoSolicitante}
 					<pre
-						class="overflow-x-auto rounded-md bg-gray-100 p-4 text-sm text-gray-800">{JSON.stringify(
+						class="overflow-x-auto rounded-md bg-gray-100 p-4 text-sm text-gray-800 dark:bg-gray-800 dark:text-gray-200">{JSON.stringify(
 							resultadoSolicitante,
 							null,
 							2

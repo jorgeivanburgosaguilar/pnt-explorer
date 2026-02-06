@@ -83,11 +83,11 @@ export async function POST({ request }) {
 
 		const data = await response.json();
 
-		const timestamp = new Date().toISOString();
-		await redis.set(
-			`obtener-detalle:${idSolicitudDependencia}:${timestamp}`,
-			JSON.stringify({ timestamp, idSolicitudDependencia, data })
-		);
+		await redis.lpush('obtener-detalle', JSON.stringify({
+			timestamp: new Date().toISOString(),
+			idSolicitudDependencia,
+			data
+		}));
 
 		return json(data);
 	} catch (error) {

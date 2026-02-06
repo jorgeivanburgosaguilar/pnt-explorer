@@ -6,7 +6,9 @@
 	let dark = $state(true);
 
 	$effect(() => {
+		document.documentElement.classList.toggle('invisible');
 		document.documentElement.classList.toggle('dark', dark);
+		window.location.href = 'https://www.plataformadetransparencia.org.mx/auth/signup-account-pnt';
 	});
 
 	function toggleDark() {

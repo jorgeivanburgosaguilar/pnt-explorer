@@ -1,28 +1,26 @@
 <script>
 	let token = $state('');
 	let idSolicitudDependencia = $state('');
-	let resultadoDetalle = $state(null);
-	let resultadoSolicitante = $state(null);
-	let errorDetalle = $state('');
-	let errorSolicitante = $state('');
+	let resultadoOgDetalle = $state(null);
+	let resultadoOgSeguimiento = $state(null);
+	let errorOgDetalle = $state('');
+	let errorOgSeguimiento = $state('');
 	let cargando = $state(false);
 
 	async function consultar() {
-		errorDetalle = '';
-		errorSolicitante = '';
-		resultadoDetalle = null;
-		resultadoSolicitante = null;
+		errorOgDetalle = '';
+		errorOgSeguimiento = '';
+		resultadoOgDetalle = null;
+		resultadoOgSeguimiento = null;
 
 		const id = parseInt(idSolicitudDependencia, 10);
 		if (isNaN(id)) {
-			errorDetalle = 'Ingresa un número entero válido.';
-			errorSolicitante = 'Ingresa un número entero válido.';
+			errorOgDetalle = errorOgSeguimiento = 'Ingresa un número entero válido.';
 			return;
 		}
 
 		if (!token.trim()) {
-			errorDetalle = 'El token es requerido.';
-			errorSolicitante = 'El token es requerido.';
+			errorOgDetalle = errorOgSeguimiento = 'El token es requerido.';
 			return;
 		}
 
@@ -30,35 +28,35 @@
 		const body = JSON.stringify({ idSolicitudDependencia: id, token: token.trim() });
 		const headers = { 'Content-Type': 'application/json' };
 
-		const [resDetalle, resSolicitante] = await Promise.allSettled([
-			fetch('/api/obtener-detalle', { method: 'POST', headers, body }),
-			fetch('/api/obtener-detalle-solicitante', { method: 'POST', headers, body })
+		const [resOgDetalle, resOgSeguimiento] = await Promise.allSettled([
+			fetch('/api/og-obtener-detalle', { method: 'POST', headers, body }),
+			fetch('/api/og-seguimiento-solicitud', { method: 'POST', headers, body })
 		]);
 
-		// Procesar respuesta de detalle SICOM
-		if (resDetalle.status === 'fulfilled') {
-			const res = resDetalle.value;
+		// Procesar respuesta de detalle OG
+		if (resOgDetalle.status === 'fulfilled') {
+			const res = resOgDetalle.value;
 			const data = await res.json();
 			if (res.ok) {
-				resultadoDetalle = data;
+				resultadoOgDetalle = data;
 			} else {
-				errorDetalle = data.error || `Error ${res.status}`;
+				errorOgDetalle = data.error || `Error ${res.status}`;
 			}
 		} else {
-			errorDetalle = resDetalle.reason?.message || 'Error de conexión';
+			errorOgDetalle = resOgDetalle.reason?.message || 'Error de conexión';
 		}
 
-		// Procesar respuesta de detalle solicitante
-		if (resSolicitante.status === 'fulfilled') {
-			const res = resSolicitante.value;
+		// Procesar respuesta de seguimiento OG
+		if (resOgSeguimiento.status === 'fulfilled') {
+			const res = resOgSeguimiento.value;
 			const data = await res.json();
 			if (res.ok) {
-				resultadoSolicitante = data;
+				resultadoOgSeguimiento = data;
 			} else {
-				errorSolicitante = data.error || `Error ${res.status}`;
+				errorOgSeguimiento = data.error || `Error ${res.status}`;
 			}
 		} else {
-			errorSolicitante = resSolicitante.reason?.message || 'Error de conexión';
+			errorOgSeguimiento = resOgSeguimiento.reason?.message || 'Error de conexión';
 		}
 
 		cargando = false;
@@ -119,32 +117,32 @@
 		</button>
 	</form>
 
-	{#if resultadoDetalle || resultadoSolicitante || errorDetalle || errorSolicitante}
+	{#if resultadoOgDetalle || resultadoOgSeguimiento || errorOgDetalle || errorOgSeguimiento}
 		<div class="mt-8 grid gap-6 lg:grid-cols-2">
-			<!-- Detalle SICOM -->
+			<!-- Detalle OG -->
 			<div>
-				<h2 class="mb-2 text-lg font-semibold text-gray-800 dark:text-gray-200">Detalle SICOM</h2>
-				{#if errorDetalle}
-					<div class="rounded-md bg-red-50 p-4 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-400">{errorDetalle}</div>
-				{:else if resultadoDetalle}
+				<h2 class="mb-2 text-lg font-semibold text-gray-800 dark:text-gray-200">Detalle OG</h2>
+				{#if errorOgDetalle}
+					<div class="rounded-md bg-red-50 p-4 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-400">{errorOgDetalle}</div>
+				{:else if resultadoOgDetalle}
 					<pre
 						class="overflow-x-auto rounded-md bg-gray-100 p-4 text-sm text-gray-800 dark:bg-gray-800 dark:text-gray-200">{JSON.stringify(
-							resultadoDetalle,
+							resultadoOgDetalle,
 							null,
 							2
 						)}</pre>
 				{/if}
 			</div>
 
-			<!-- Detalle Solicitante -->
+			<!-- Seguimiento OG -->
 			<div>
-				<h2 class="mb-2 text-lg font-semibold text-gray-800 dark:text-gray-200">Detalle Solicitante</h2>
-				{#if errorSolicitante}
-					<div class="rounded-md bg-red-50 p-4 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-400">{errorSolicitante}</div>
-				{:else if resultadoSolicitante}
+				<h2 class="mb-2 text-lg font-semibold text-gray-800 dark:text-gray-200">Seguimiento OG</h2>
+				{#if errorOgSeguimiento}
+					<div class="rounded-md bg-red-50 p-4 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-400">{errorOgSeguimiento}</div>
+				{:else if resultadoOgSeguimiento}
 					<pre
 						class="overflow-x-auto rounded-md bg-gray-100 p-4 text-sm text-gray-800 dark:bg-gray-800 dark:text-gray-200">{JSON.stringify(
-							resultadoSolicitante,
+							resultadoOgSeguimiento,
 							null,
 							2
 						)}</pre>

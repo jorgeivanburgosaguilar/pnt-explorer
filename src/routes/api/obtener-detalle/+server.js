@@ -1,10 +1,19 @@
+import { env } from '$env/dynamic/private';
 import { json } from '@sveltejs/kit';
+import { Redis } from '@upstash/redis';
+
+const redis = new Redis({
+	url: env.KV_REST_API_URL || '',
+	token: env.KV_REST_API_TOKEN || ''
+});
 
 /**
  * Consulta el detalle de una solicitud en la Plataforma Nacional de Transparencia (PNT).
  *
  * Recibe un `idSolicitudDependencia` (entero) y un `token` Bearer, y los reenvía al
  * endpoint SICOM de la PNT junto con `idOrganoGarante: 31`, devolviendo la respuesta tal cual.
+ * Guarda cada respuesta exitosa en Upstash Redis como registro de acceso
+ * con la clave `obtener-detalle:{id}:{timestamp}`.
  *
  * @param {import('@sveltejs/kit').RequestEvent} event
  * @returns {Promise<Response>} JSON con el detalle de la solicitud o un objeto de error.
@@ -73,6 +82,13 @@ export async function POST({ request }) {
 		}
 
 		const data = await response.json();
+
+		const timestamp = new Date().toISOString();
+		await redis.set(
+			`obtener-detalle:${idSolicitudDependencia}:${timestamp}`,
+			JSON.stringify({ timestamp, idSolicitudDependencia, data })
+		);
+
 		return json(data);
 	} catch (error) {
 		console.error('Error in obtener-detalle API:', error);
